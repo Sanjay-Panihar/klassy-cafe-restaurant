@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Session;
 
 class UserController extends Controller
 {
@@ -49,7 +50,6 @@ class UserController extends Controller
      */
     public function show($id)
     {
-      echo "<pre>"; print_r($id); die;
 
     }
 
@@ -62,6 +62,7 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
        $user = User::where('id', $id)->first();
+
         return view('admin.users.edit', compact('user'));
     }
 
@@ -98,6 +99,26 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        dd($id);
+      $user = User::findOrFail($id)->delete();
+
+      return redirect()->back()->with('message', 'Data deleted successfully.');
+    }
+
+    public function changeStatus(Request $request )
+    {
+      $user = User::findOrFail($request->id);
+      if ($request->status == "true") {
+          $user->update([
+            'status' => 1
+          ]);
+    } else {
+          $user->update([
+            'status'  => 0
+          ]);
+    }
+        return response()->json([
+          'message'  =>  Session::flash('message', 'Status changed successfully.')
+        ]);
+
     }
 }
