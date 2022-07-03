@@ -1,0 +1,5 @@
+.slow  .toggle-group { transition: left 0.7s; -webkit-transition: left 0.7s; }
+
+.button-height {
+  height: 28px;
+}
