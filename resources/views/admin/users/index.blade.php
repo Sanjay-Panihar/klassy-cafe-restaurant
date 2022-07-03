@@ -1,6 +1,11 @@
 @extends('admin.layouts.adminhome')
 @section('title', 'Users')
 @section('content')
+@if(session()->has('message'))
+    <div class="alert alert-success" id ="message">
+        {{ session()->get('message') }}
+    </div>
+@endif
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10">
@@ -18,6 +23,7 @@
   </thead>
   <tbody>
     @foreach($users as $user)
+    @if(Auth::user()->id != $user->id)
     <tr>
       <th scope="row">{{$user->id}}</th>
       <td>{{$user->name}}</td>
@@ -27,7 +33,7 @@
       <td class="text-center">
       <ul class="list-inline m-0">
             <li class="list-inline-item">
-              <input type="checkbox" checked data-toggle="toggle" data-style="slow" data-size="xs" onChange="getStatus(this)" id="getStatus">
+              <input type="checkbox"  data-toggle="toggle" data-style="slow" data-size="xs" onChange="getStatus(this)" id="getStatus" value="{{$user->id}}" {{$user->status == 1 ? 'checked' : ''}} >
             </li>
             <li class="list-inline-item">
                <form action="{{ route('users.edit', ['user' => $user->id]) }}" method="POST">
@@ -45,6 +51,7 @@
         </ul>
       </td>
     </tr>
+    @endif
     @endforeach
 
   </tbody>
@@ -63,11 +70,22 @@
 
 $('[data-toggle="tooltip"]').tooltip();
 
-function getStatus(status) {
+  function getStatus(status) {
+     var status= $('#getStatus').prop('checked');
+     var id = $('#getStatus').val();
+     $.ajax({
+      url: "{{url('changeStatus')}}",
+      method : "POST",
+      data : {id, status, _token:"{{csrf_token()}}"},
+      success: function(response) {
+        if(response) {
+                $("#message").html(response.message);
+                window.location.reload();
+          }
+      }
+     });
 
- var mode= $('#getStatus').prop('checked');
-
-}
+   }
 
 $('.delete-confirm').click(function(event) {
      var form =  $(this).closest("form");

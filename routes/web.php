@@ -17,11 +17,11 @@ use App\Http\Controllers\Admin;
 
 
 Route::get('/', 'App\Http\Controllers\HomeController@index');
-Route::get('/', 'App\Http\Controllers\HomeController@index');
 
 Route::get('/dashboard', function () {
     return view('admin.layouts.adminhome');
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('users', Admin\UserController::class);
+Route::post('/changeStatus',[Admin\UserController::class, 'changeStatus']);
 require __DIR__.'/auth.php';
