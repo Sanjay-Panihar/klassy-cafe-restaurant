@@ -61,7 +61,7 @@ class UserController extends Controller
      */
     public function edit(Request $request, $id)
     {
-       $user = User::where('id', $id)->first();
+       $user = User::findOrFail($id)->first();
 
         return view('admin.users.edit', compact('user'));
     }
@@ -116,8 +116,9 @@ class UserController extends Controller
             'status'  => 0
           ]);
     }
+    Session::flash('message', 'Status changed successfully.');
         return response()->json([
-          'message'  =>  Session::flash('message', 'Status changed successfully.')
+          'message'  =>  'Status changed successfully.'
         ]);
 
     }
