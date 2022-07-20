@@ -36,11 +36,7 @@
               <input type="checkbox"  data-toggle="toggle" data-style="slow" data-size="xs" onChange="getStatus(this)" id="getStatus" value="{{$user->id}}" {{$user->status == 1 ? 'checked' : ''}} >
             </li>
             <li class="list-inline-item">
-               <form action="{{ route('users.edit', ['user' => $user->id]) }}" method="POST">
-                  @csrf
-                  {{ method_field("GET") }}
-                 <button class="btn btn-success btn-sm rounded-0 button-height" type="submit" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-            </form>
+                 <a class="btn btn-success btn-sm rounded-0 button-height" href="{{ route('users.edit', ['user' => $user->id]) }}" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
             </li>
             <li class="list-inline-item">
               <form action="{{ URL::route('users.destroy', ['user' => $user->id]) }}" method="POST">

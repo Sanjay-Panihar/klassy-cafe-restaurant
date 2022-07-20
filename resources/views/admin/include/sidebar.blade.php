@@ -14,7 +14,7 @@
           </li>
 
           <li class="nav-item menu-items">
-            <a class="nav-link" href="{{url('users')}}">
+            <a class="nav-link" href="{{ url('users') }}">
               <span class="menu-icon">
                 <i class="mdi mdi-playlist-play"></i>
               </span>
@@ -22,7 +22,7 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/tables/basic-table.html">
+            <a class="nav-link" href="{{ url('food') }}">
               <span class="menu-icon">
                 <i class="mdi mdi-table-large"></i>
               </span>
@@ -30,7 +30,7 @@
             </a>
           </li>
           <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/charts/chartjs.html">
+            <a class="nav-link" href="{{ url('food') }}">
               <span class="menu-icon">
                 <i class="mdi mdi-chart-bar"></i>
               </span>

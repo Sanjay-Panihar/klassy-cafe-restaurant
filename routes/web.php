@@ -23,5 +23,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('users', Admin\UserController::class);
+Route::resource('food', Admin\FoodController::class);
+
+
 Route::post('/changeStatus',[Admin\UserController::class, 'changeStatus']);
 require __DIR__.'/auth.php';
