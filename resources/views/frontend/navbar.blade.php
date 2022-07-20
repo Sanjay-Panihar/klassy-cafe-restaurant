@@ -22,8 +22,13 @@
                             </li>
                             <!-- <li class=""><a rel="sponsored" href="https://templatemo.com" target="_blank">External URL</a></li> -->
                             <li class="scroll-to-section"><a href="#reservation">Contact Us</a></li>
+
+                            @auth
+                                <li class="scroll-to-section"><a href="{{url('dashboard')}}">Dashboard</a></li>
+                            @else
                             <li class="scroll-to-section"><a href="{{url('login')}}">Login</a></li>
                             <li class="scroll-to-section"><a href="{{url('register')}}">Register</a></li>
+                            @endauth
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>

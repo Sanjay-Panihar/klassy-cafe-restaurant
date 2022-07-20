@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Session;
+use App\Models\Food;
 
-class UserController extends Controller
+class FoodController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,9 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+      $foods = Food::all();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.food.index', compact('foods'));
     }
 
     /**
@@ -28,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.food.create');
     }
 
     /**
@@ -39,7 +38,29 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+      'title'       => 'required',
+      'price'       => 'required',
+      'description' => 'required',
+      ]);
+
+      if ($request->hasFile('image')) {
+          $request->validate([
+          'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
+        $path = 'public/images';
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName();
+        $path = $request->file('image')->storeAs($path, $imageName);
+      }
+
+      $food = Food::create([
+        'title'        => $request->title,
+        'price'        => $request->price,
+        'description'  => $request->description,
+        'photo'        => $imageName,
+      ]);
+      return redirect()->back()->with('message', 'Food saved successfully.');
     }
 
     /**
@@ -50,7 +71,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-
+        echo "<pre>"; print_r('show'); die;
     }
 
     /**
@@ -61,9 +82,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-       $user = User::where('id', $id)->first();
-      
-        return view('admin.users.edit', compact('user'));
+        echo "<pre>"; print_r('test'); die;
     }
 
     /**
@@ -75,20 +94,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $validated = $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users,email,'.$id,
-        'password' => 'required|min:6',
-        'password_confirmation' => 'required|same:password|min:6'
-    ]);
-
-      $userUpdate = User::findOrFail($id)->update([
-        'name'        => $request->name,
-        'email'       => $request->email,
-        'password'    => $request->password,
-      ]);
-
-      return redirect()->back()->with('message', 'Data updated successfully.');
+        //
     }
 
     /**
@@ -99,26 +105,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-      $user = User::findOrFail($id)->delete();
-
-      return redirect()->back()->with('message', 'Data deleted successfully.');
-    }
-
-    public function changeStatus(Request $request )
-    {
-      $user = User::findOrFail($request->id);
-      if ($request->status == "true") {
-          $user->update([
-            'status' => 1
-          ]);
-    } else {
-          $user->update([
-            'status'  => 0
-          ]);
-    }
-    Session::flash('message', 'Status changed successfully.');
-        return response()->json([
-          'message'  =>  'Status changed successfully.'
-        ]);
+      Food::find($id)->delete();
+      return redirect()->back()->with('message', 'Data deleted successfully');
     }
 }
