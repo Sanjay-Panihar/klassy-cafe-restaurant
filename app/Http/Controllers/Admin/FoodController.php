@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Food;
+use Session;
+use Illuminate\Support\Facades\Validator;
 
 class FoodController extends Controller
 {
@@ -82,7 +84,9 @@ class FoodController extends Controller
      */
     public function edit($id)
     {
-        echo "<pre>"; print_r('test'); die;
+        $food = Food::findOrFail($id);
+
+        return response()->json( $food);
     }
 
     /**
@@ -94,7 +98,39 @@ class FoodController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $validator = Validator::make($request->all(),[
+        'title'       => 'required',
+        'price'       => 'required',
+        'description' => 'required',
+        ]);
+
+      if ($validator->fails()) {
+          return redirect()->back()
+                           ->withErrors($validator)
+                           ->withInput();
+        }
+
+      if ($request->has('image')) {
+          $request->validate([
+          'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
+
+        $path = 'public/images';
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName();
+        $path = $request->file('image')->storeAs($path, $imageName);
+        $food = Food::findOrFail($id)->update([
+            'photo'        => $imageName,
+        ]);
+      }
+
+        $food = Food::findOrFail($id)->update([
+          'title'        => $request->title,
+          'price'        => $request->price,
+          'description'  => $request->description,
+        ]);
+
+          return redirect()->back()->with('message', 'Food updated successfully.');
     }
 
     /**
@@ -106,6 +142,7 @@ class FoodController extends Controller
     public function destroy($id)
     {
       Food::find($id)->delete();
+
       return redirect()->back()->with('message', 'Data deleted successfully');
     }
 }
