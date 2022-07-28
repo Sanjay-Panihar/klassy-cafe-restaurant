@@ -8,6 +8,7 @@
           {{ session()->get('message') }}
       </div>
   @endif
+
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-9">
@@ -41,7 +42,7 @@
       <td class="text-center">
       <ul class="list-inline m-0">
             <li class="list-inline-item">
-                 <a class="btn btn-success btn-sm rounded-0 button-height"  href="{{ route('food.edit', ['food' => $food->id]) }}"><i class="fa fa-edit"></i></a>
+                 <a class="btn btn-success btn-sm rounded-0 button-height editFood"  href="javascript:void(0)" id="editFood" data-toggle="modal" data-target="#exampleModalLong" dataId= "{{ $food->id }}"><i class="fa fa-edit"></i></a>
             </li>
             <li class="list-inline-item">
               <form action="{{ URL::route('food.destroy', ['food' => $food->id]) }}" method="POST">
@@ -61,6 +62,7 @@
     </div>
     <div class="col-md-2"> </div>
   </div>
+  @include('admin.food.edit-food-modal')
 
   @endsection
 
@@ -87,6 +89,24 @@
          }
        });
    });
-</script>
 
+$('.editFood').on('click', function() {
+   foodId = $(this).attr('dataId');
+   url = '/food' + '/' + foodId + '/edit'
+  $.ajax({
+    type : 'GET',
+    url: url,
+    success: function (food) {
+      $('#price').val(food.price);
+      $('#title').val(food.title);
+      $('#description').val(food.description);
+    },
+  });
+
+});
+
+@if (count($errors) > 0)
+    $('#exampleModalLong').modal('show');
+@endif
+</script>
 @endsection
