@@ -119,12 +119,12 @@ class FoodController extends Controller
         $image = $request->file('image');
         $imageName = time().$image->getClientOriginalName();
         $path = $request->file('image')->storeAs($path, $imageName);
-        $food = Food::findOrFail($id)->update([
+        $food = Food::findOrFail($request->id)->update([
             'photo'        => $imageName,
         ]);
       }
-        
-        $food = Food::findOrFail($id)->update([
+
+        $food = Food::findOrFail($request->id)->update([
           'title'        => $request->title,
           'price'        => $request->price,
           'description'  => $request->description,
