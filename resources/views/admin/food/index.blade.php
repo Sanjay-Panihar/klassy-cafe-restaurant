@@ -97,6 +97,7 @@ $('.editFood').on('click', function() {
     type : 'GET',
     url: url,
     success: function (food) {
+      $('#id').val(food.id);
       $('#price').val(food.price);
       $('#title').val(food.title);
       $('#description').val(food.description);
